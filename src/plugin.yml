@@ -1,0 +1,8 @@
+name: RedstoneSRV
+description: sla
+version: _alfa_1.1.2-(claim system)
+main: me.skwead.RedstoneSRV
+commands:
+  claim:
+    description: Cria uma região.
+    usage: /claim <raio>

@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="RedstoneSRV:jar">
+    <output-path>$PROJECT_DIR$/../../JF/MinecraftServers/1.14.3/plugins</output-path>
+    <root id="archive" name="RedstoneSRV.jar">
+      <element id="module-output" name="RedstoneSRV" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/spigot-1.14.3.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

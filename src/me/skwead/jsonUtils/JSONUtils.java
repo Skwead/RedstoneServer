@@ -1,5 +1,6 @@
 package me.skwead.jsonUtils;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -14,6 +15,10 @@ public class JSONUtils {
     public JSONObject addJSONobj(JSONObject parent, JSONObject child, String key){
         parent.put(key, child);
         return parent;
+    }
+
+    public void addJSONArr(JSONArray array, JSONObject obj){
+        array.add(obj);
     }
 
     public JSONObject getJSONfromFile(String path) throws ParseException, IOException {
@@ -37,5 +42,13 @@ public class JSONUtils {
         }
 
         return fullJsonText;
+    }
+
+    public JSONArray getJSONArrayfromFile(String path) throws ParseException, IOException {
+        String fullJsonText = getStringFromFile(path);
+
+        JSONParser parser = new JSONParser();
+
+        return (JSONArray) parser.parse(fullJsonText);
     }
 }

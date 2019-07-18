@@ -4,10 +4,12 @@ import me.skwead.RedstoneSRV;
 import me.skwead.jsonUtils.JSONUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -51,8 +53,12 @@ public class RegionManager {
 
         try {
 //            JSONObject finalObj = jsonUtils.addJSONobj(jsonUtils.getJSONfromFile(plugin.getClaimsFile().getPath()), object, "Claim");
-            JSONObject finalObj = jsonUtils.addJSONobj((JSONObject) p.parse(plugin.getClaimsFile().toString()), object, "Claim");
-            writer.write(finalObj.toString());
+//            JSONObject finalObj = jsonUtils.addJSONobj((JSONObject) p.parse(plugin.getClaimsFile().toString()), object, "Claim");
+//            JSONObject finalObj = jsonUtils.addJSONobj((JSONObject) p.parse(new FileReader(plugin.getClaimsFile())), object, "Claim");
+            plugin.getChatUtils().consoleMessage(plugin.getClaimsFile().getPath());
+            JSONArray all = (JSONArray) p.parse(new FileReader(plugin.getClaimsFile()));
+//            writer.write(finalObj.toString());
+            plugin.saveResource(plugin.getClaimsFile().getName(), true);
         } catch (ParseException e) {
             e.printStackTrace();
         } finally {
@@ -63,9 +69,13 @@ public class RegionManager {
 }
 
 /*
-"Location":{
-    "Location Owner": "",
-    "Location X": "",
-    "Location Z": ""
+[
+  {
+      "Location":{
+          "Location Owner": "",
+          "Location X": "",
+          "Location Z": ""
+    }
   }
+]
  */

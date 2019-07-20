@@ -2,13 +2,11 @@ package me.skwead;
 
 import me.skwead.claim.RegionManager;
 import me.skwead.claim.commands.Claim;
+import me.skwead.jsonUtils.JSONUtils;
 import me.skwead.utils.ChatUtils;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
 import java.io.File;
-import java.io.FileReader;
+import java.io.IOException;
 
 public class RedstoneSRV extends JavaPlugin {
 
@@ -30,23 +28,14 @@ public class RedstoneSRV extends JavaPlugin {
     public void onEnable(){
 
         chatUtils.consoleMessage("&4[RedstoneSRV] &e[INFO] &9A ligar...");
-
-        setupJSON();
+        try {
+            plugin.getChatUtils().consoleMessage("&c Conteúdo do ficheiro: &4"+new JSONUtils().getStringFromFile(plugin.getClaimsFile().getPath()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         getCommand("claim").setExecutor(claimCmd);
 
         chatUtils.consoleMessage("&4[RedstoneSRV] &a[SUCESSO] &9Ligado!");
-    }
-
-    private void setupJSON(){
-        for(File file : this.getDataFolder().listFiles()){
-            try{
-                JSONParser jsonParser = new JSONParser();
-                Object parsed = jsonParser.parse(new FileReader(file.getPath()));
-                JSONObject jsonObject = (JSONObject) parsed;
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }
     }
 }

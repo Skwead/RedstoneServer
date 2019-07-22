@@ -1,6 +1,6 @@
 name: RedstoneSRV
 description: sla
-version: _alfa_1.1.3.6-(claim system)
+version: _alfa_1.1.3.8-(claim system)
 main: me.skwead.RedstoneSRV
 commands:
   claim:

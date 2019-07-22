@@ -92,9 +92,12 @@ public class RegionManager {
     }
 
     public UUID getClaimOwner(Location l){ //claim<UUID, Location>
+//        /**/plugin.getChatUtils().consoleMessage("&cA sacar o dono de &4 "+l.toString());
         for(Map.Entry<UUID, Location> entry : claims.entrySet()){
-            if(entry.getValue() == l) return entry.getKey();
+//            /**/plugin.getChatUtils().consoleMessage("&cA comparar com &4"+entry.getValue().toString());
+            if(entry.getValue().equals(l)) return entry.getKey();
         }
+//        /**/plugin.getChatUtils().consoleMessage("&cNada encontrado");
         return null;
     }
 

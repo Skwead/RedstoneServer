@@ -21,7 +21,7 @@ public class RedstoneSRV extends JavaPlugin {
     private ChatUtils chatUtils = new ChatUtils(plugin);
     private RegionManager regionManager = new RegionManager(plugin);
     private Claim claimCmd = new Claim(plugin);
-    private RegionListener regionListener = new RegionListener(regionManager, plugin);
+    private RegionListener regionListener = new RegionListener(plugin);
 
     public RegionManager getRegionManager() {
         return regionManager;

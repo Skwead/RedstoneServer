@@ -1,6 +1,7 @@
 package me.skwead.claim;
 
 import me.skwead.RedstoneSRV;
+import me.skwead.utils.chat.MessageType;
 import me.skwead.utils.jsonUtils.JSONUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -14,7 +15,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class RegionManager {
-    private Map<UUID, Location> claims = new HashMap();
+    private Map<Location, UUID> claims = new HashMap();
     private RedstoneSRV plugin;
 
     public RegionManager(RedstoneSRV plugin) {
@@ -27,8 +28,7 @@ public class RegionManager {
 
         for(int i = -radious; i<=radious; i++){ //iteração x
             for(int j = -radious; j<=radious; j++){ //iteração z
-                Location l = new Location(centreChunk.getWorld(), centreChunk.getX() + i, centreChunk.getY(), centreChunk.getZ() + j);
-                claims.put(uuid, l);
+                Location l = new Location(centreChunk.getWorld(), centreChunk.getX() + i ,0 ,centreChunk.getZ() + j);
 
                 String x = String.valueOf(centreChunk.getX() + i);
                 String z = String.valueOf(centreChunk.getZ() + j);
@@ -39,16 +39,17 @@ public class RegionManager {
                 newClaim.put("X", x);
                 newClaim.put("Z", z);
 
-                addClaim(newClaim);
-
                 try{
-                    addToClaimsFile(newClaim);
+                    addToClaimsFile(newClaim); plugin.getChatUtils().log(MessageType.INFO, "Adicionado ao ficheiro.");
+                    claims.put(l, uuid); plugin.getChatUtils().log(MessageType.INFO, "Adicionado ao mapa.");
                 } catch (Exception e){
                     e.printStackTrace();
                 }
-                plugin.getChatUtils().consoleMessage("&4[RedstoneSRV] &a[SUCESSO] &9Adicionado terreno! &a" + newClaim.toString());
+
+                plugin.getChatUtils().log(MessageType.SUCCESS, "Adicionado terreno! &a" + newClaim.toString());
             }
         }
+        plugin.getChatUtils().log(MessageType.INFO, "claims.toString(): &4"+claims.toString());
     }
 
     public void addToClaimsFile(JSONObject object) throws IOException {
@@ -79,41 +80,26 @@ public class RegionManager {
         }
     }
 
-    public void addClaim(Object JSONclaim){
+    public void addClaim(Object JSONclaim){ //Passa do Objct para o HashMap<>
         JSONParser p = new JSONParser();
         try {
             JSONObject c = (JSONObject) p.parse(JSONclaim.toString());
-            plugin.getRegionManager().getClaims().put(UUID.fromString((String) c.get("Owner")), new Location(
-                    plugin.getServer().getWorld(c.get("World").toString()),
-                    Double.valueOf((String) c.get("X")), 0, Double.valueOf((String) c.get("Z"))));
+            plugin.getRegionManager().getClaims().put(new Location(
+                                plugin.getServer().getWorld(c.get("World").toString()),
+                                Double.valueOf((String) c.get("X")), 0, Double.valueOf((String) c.get("Z"))), UUID.fromString((String) c.get("Owner")));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public UUID getClaimOwner(Location l){ //claim<UUID, Location>
-//        /**/plugin.getChatUtils().consoleMessage("&cA sacar o dono de &4 "+l.toString());
-        for(Map.Entry<UUID, Location> entry : claims.entrySet()){
-//            /**/plugin.getChatUtils().consoleMessage("&cA comparar com &4"+entry.getValue().toString());
-            if(entry.getValue().equals(l)) return entry.getKey();
+    public UUID getClaimOwner(Location l){
+        for(Map.Entry<Location, UUID> entry : claims.entrySet()){
+            if(entry.getKey().equals(l)) return entry.getValue();
         }
-//        /**/plugin.getChatUtils().consoleMessage("&cNada encontrado");
         return null;
     }
 
-    public Map<UUID, Location> getClaims() {
+    public Map<Location, UUID> getClaims() {
         return claims;
     }
 }
-
-/*
-[
-  {
-      "Location":{
-          "Location Owner": "d3d2d76f-1f91-454f-9bf9-bb1cf2f2f385",
-          "Location X": "-11",
-          "Location Z": "2"
-    }
-  }
-]
- */

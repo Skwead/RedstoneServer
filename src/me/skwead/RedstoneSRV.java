@@ -5,11 +5,10 @@ package me.skwead;
 import me.skwead.claim.RegionListener;
 import me.skwead.claim.RegionManager;
 import me.skwead.claim.commands.Claim;
-import me.skwead.utils.jsonUtils.JSONUtils;
-import me.skwead.utils.ChatUtils;
+import me.skwead.utils.chat.ChatUtils;
+import me.skwead.utils.chat.MessageType;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
-import java.io.IOException;
 
 public class RedstoneSRV extends JavaPlugin {
 
@@ -31,7 +30,7 @@ public class RedstoneSRV extends JavaPlugin {
     @Override
     public void onEnable(){
 
-        chatUtils.consoleMessage("&4[RedstoneSRV] &e[INFO] &9A ligar...");
+        chatUtils.log(MessageType.INFO, "A ligar...");
 
         regionManager.setupClaims();
 //        try {
@@ -44,6 +43,6 @@ public class RedstoneSRV extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(regionListener, this);
 
-        chatUtils.consoleMessage("&4[RedstoneSRV] &a[SUCESSO] &9Ligado!");
+        chatUtils.log(MessageType.SUCCESS,"Servidor ligado.");
     }
 }

@@ -3,8 +3,10 @@ package me.skwead.claim;
 import me.skwead.RedstoneSRV;
 import me.skwead.utils.chat.MessageType;
 import me.skwead.utils.jsonUtils.JSONUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -16,6 +18,7 @@ import java.util.*;
 
 public class RegionManager {
     private Map<Location, UUID> claims = new HashMap();
+    private List<UUID> inClaim = new ArrayList<>();
     private RedstoneSRV plugin;
 
     public RegionManager(RedstoneSRV plugin) {
@@ -99,7 +102,47 @@ public class RegionManager {
         return null;
     }
 
+    public void unclaim(Location location, UUID player){
+        if((getClaimOwner(location)!=null)&&(getClaimOwner(location).equals(player))){
+            try {
+                JSONArray arrclaims = new JSONUtils().getJSONArrayfromFile(plugin.getClaimsFile().getPath());
+                arrclaims.forEach(claim ->{
+                    JSONObject jsonClaim = (JSONObject)claim;
+                    if(jsonClaim.get("Owner").equals(player)){
+                        arrclaims.remove(claim);
+                        claims.remove(location);
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+        plugin.getChatUtils().playerMessage(Bukkit.getPlayer(player), "&aNão podes apagar um terreno que não tens.");
+    }
+
+    public void updateInClaims(PlayerMoveEvent e){
+        for(Location l: claims.keySet()){
+            if((!((claims.keySet().contains(e.getTo().getChunk()))&&(claims.keySet().contains(e.getFrom().getChunk())))) ||
+                    ((claims.keySet().contains(e.getTo().getChunk()))&&(claims.keySet().contains(e.getFrom().getChunk())))){   //Muda de estado
+                if((claims.keySet().contains(e.getTo().getChunk()))&&(!claims.keySet().contains(e.getFrom().getChunk()))){     //Entra
+                    inClaim.add(e.getPlayer().getUniqueId());
+                    plugin.getChatUtils().log(MessageType.INFO, "ENTROU.");
+                    return;
+                } else {                                                                                //Sai
+                    inClaim.remove(e.getPlayer().getUniqueId());
+                    plugin.getChatUtils().log(MessageType.INFO, "SAIU.");
+                }
+            }
+        }
+    }
+
     public Map<Location, UUID> getClaims() {
         return claims;
+    }
+
+    public List<UUID> getInClaim() {
+        return inClaim;
     }
 }

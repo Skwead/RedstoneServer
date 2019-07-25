@@ -33,13 +33,9 @@ public class RedstoneSRV extends JavaPlugin {
         chatUtils.log(MessageType.INFO, "A ligar...");
 
         regionManager.setupClaims();
-//        try {
-//            plugin.getChatUtils().consoleMessage("&c Conteúdo do ficheiro: &4"+new JSONUtils().getStringFromFile(plugin.getClaimsFile().getPath()));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
         getCommand("claim").setExecutor(claimCmd);
+        getCommand("unclaim").setExecutor(claimCmd);
 
         getServer().getPluginManager().registerEvents(regionListener, this);
 

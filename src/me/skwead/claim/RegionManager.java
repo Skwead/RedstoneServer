@@ -122,27 +122,7 @@ public class RegionManager {
         plugin.getChatUtils().playerMessage(Bukkit.getPlayer(player), "&aNão podes apagar um terreno que não tens.");
     }
 
-    public void updateInClaims(PlayerMoveEvent e){
-        for(Location l: claims.keySet()){
-            if((!((claims.keySet().contains(e.getTo().getChunk()))&&(claims.keySet().contains(e.getFrom().getChunk())))) ||
-                    ((claims.keySet().contains(e.getTo().getChunk()))&&(claims.keySet().contains(e.getFrom().getChunk())))){   //Muda de estado
-                if((claims.keySet().contains(e.getTo().getChunk()))&&(!claims.keySet().contains(e.getFrom().getChunk()))){     //Entra
-                    inClaim.add(e.getPlayer().getUniqueId());
-                    plugin.getChatUtils().log(MessageType.INFO, "ENTROU.");
-                    return;
-                } else {                                                                                //Sai
-                    inClaim.remove(e.getPlayer().getUniqueId());
-                    plugin.getChatUtils().log(MessageType.INFO, "SAIU.");
-                }
-            }
-        }
-    }
-
     public Map<Location, UUID> getClaims() {
         return claims;
-    }
-
-    public List<UUID> getInClaim() {
-        return inClaim;
     }
 }

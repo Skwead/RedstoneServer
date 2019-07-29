@@ -45,7 +45,7 @@ public class RegionManager {
                 newClaim.put("Z", z);
 
                 try{
-                    addToClaimsFile(newClaim); plugin.getChatUtils().log(MessageType.INFO, "Adicionado ao ficheiro.");
+                    new JSONUtils().addToFile(newClaim, plugin.getClaimsFile().getPath()); plugin.getChatUtils().log(MessageType.INFO, "Adicionado ao ficheiro.");
                     claims.put(l, uuid); plugin.getChatUtils().log(MessageType.INFO, "Adicionado ao mapa.");
                 } catch (Exception e){
                     e.printStackTrace();
@@ -55,25 +55,6 @@ public class RegionManager {
             }
         }
         plugin.getChatUtils().log(MessageType.INFO, "claims.toString(): &4"+claims.toString());
-    }
-
-    public void addToClaimsFile(JSONObject object) throws IOException {
-        JSONParser p = new JSONParser();
-
-        try {
-            JSONArray all = (JSONArray) p.parse(new JSONUtils().getStringFromFile(plugin.getClaimsFile().getPath()));
-            all.add(object);
-            try{
-                FileWriter writer = new FileWriter(plugin.getClaimsFile());
-                writer.write(all.toString());
-                writer.flush();
-                writer.close();
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
     }
 
     public void setupClaims(){
@@ -116,20 +97,21 @@ public class RegionManager {
                 for(int i = 0; i < claimArr.size(); i++){
                     JSONObject claimObj = (JSONObject)claimArr.get(i);
                     Location verify = new Location(Bukkit.getWorld((String)claimObj.get("World")), Double.valueOf((String)claimObj.get("X")), 0,
-                            Double.valueOf((String)claimObj.get("X")));
+                            Double.valueOf((String)claimObj.get("Z")));
 
                     plugin.getChatUtils().log(MessageType.INFO, "A iterar... ");
-                    plugin.getChatUtils().log(MessageType.INFO, (new LocationUtils().getChunkCoords(verify).toString()));
+                    plugin.getChatUtils().log(MessageType.INFO, (verify.toString()));
                     plugin.getChatUtils().log(MessageType.INFO, location.toString());
 
-                    if((new LocationUtils().getChunkCoords(verify)).equals(claims.get(location))){
+                    if(verify.equals(location)){
 
                         plugin.getChatUtils().log(MessageType.INFO, "É igual.");
 
                         claims.remove(location);
-                        claimArr.remove(i);
+                        new JSONUtils().removeFromFile((JSONObject) claimArr.get(i), plugin.getClaimsFile().getPath());
 
                         plugin.getChatUtils().log(MessageType.INFO, "Removidos");
+                        break;
                     }
                 }
 

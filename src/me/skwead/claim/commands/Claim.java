@@ -1,6 +1,7 @@
 package me.skwead.claim.commands;
 
 import me.skwead.RedstoneSRV;
+import me.skwead.utils.LocationUtils;
 import me.skwead.utils.chat.MessageType;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -36,16 +37,23 @@ public class Claim implements CommandExecutor {
             plugin.getChatUtils().playerMessage(player, "&aTerreno comprado com sucesso.");
             return true;
         }
-        if(cmd.getName().equalsIgnoreCase("unclaim")){// /delclaim
+        if(cmd.getName().equalsIgnoreCase("unclaim")){// /unclclaim
             if(!(sender instanceof Player)){
                 plugin.getChatUtils().log(MessageType.ERROR, "Comando só para jogadores.");
                 return true;
             }
             Player p = (Player) sender;
-            plugin.getRegionManager().unclaim(p.getLocation(), p.getUniqueId());
-            plugin.getChatUtils().playerMessage(p, "&aTerreno abandonado com sucesso.");
+            Location l = new LocationUtils().getChunkCoords(p.getLocation());
+            plugin.getRegionManager().unclaim(l, p.getUniqueId());
+            plugin.getChatUtils().playerMessage(p, "&aTerreno abandonado com sucesso!");
             return true;
         }
         return false;
     }
 }
+/*
+[09:25:31 WARN]: java.lang.ClassCastException: class org.json.simple.JSONArray cannot be cast to class org.json.simple.JSONObject (org.json.simple.JSONArray and org.json.simple.JSONObject are in unnamed module of loader 'app')
+[09:25:31 WARN]:        at me.skwead.utils.jsonUtils.JSONUtils.getJSONfromFile(JSONUtils.java:29)
+[09:25:31 WARN]:        at me.skwead.claim.RegionManager.unclaim(RegionManager.java:108)
+[09:25:31 WARN]:        at me.skwead.claim.commands.Claim.onCommand(Claim.java:46)
+*/

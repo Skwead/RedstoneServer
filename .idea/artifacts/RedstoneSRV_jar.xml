@@ -3,7 +3,6 @@
     <output-path>$PROJECT_DIR$/../../JF/MinecraftServers/1.14.4/plugins</output-path>
     <root id="archive" name="RedstoneSRV.jar">
       <element id="module-output" name="RedstoneSRV" />
-      <element id="library" level="project" name="spigot-1.14.4" />
     </root>
   </artifact>
 </component>

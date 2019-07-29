@@ -1,6 +1,8 @@
 package me.skwead.claim;
 
+import com.google.gson.JsonArray;
 import me.skwead.RedstoneSRV;
+import me.skwead.utils.LocationUtils;
 import me.skwead.utils.chat.MessageType;
 import me.skwead.utils.jsonUtils.JSONUtils;
 import org.bukkit.Bukkit;
@@ -103,23 +105,40 @@ public class RegionManager {
     }
 
     public void unclaim(Location location, UUID player){
-        if((getClaimOwner(location)!=null)&&(getClaimOwner(location).equals(player))){
+
+        plugin.getChatUtils().log(MessageType.INFO, "A iniciar validação.");
+
+        if((getClaimOwner(location)!= null) && (getClaimOwner(location).equals(player))){
+            plugin.getChatUtils().log(MessageType.INFO, "O dono do terreno é o próprio.");
             try {
-                JSONArray arrclaims = new JSONUtils().getJSONArrayfromFile(plugin.getClaimsFile().getPath());
-                arrclaims.forEach(claim ->{
-                    JSONObject jsonClaim = (JSONObject)claim;
-                    if(jsonClaim.get("Owner").equals(player)){
-                        arrclaims.remove(claim);
+                JSONArray claimArr = new JSONUtils().getJSONArrayfromFile(plugin.getClaimsFile().getPath());
+
+                for(int i = 0; i < claimArr.size(); i++){
+                    JSONObject claimObj = (JSONObject)claimArr.get(i);
+                    Location verify = new Location(Bukkit.getWorld((String)claimObj.get("World")), Double.valueOf((String)claimObj.get("X")), 0,
+                            Double.valueOf((String)claimObj.get("X")));
+
+                    plugin.getChatUtils().log(MessageType.INFO, "A iterar... ");
+                    plugin.getChatUtils().log(MessageType.INFO, (new LocationUtils().getChunkCoords(verify).toString()));
+                    plugin.getChatUtils().log(MessageType.INFO, location.toString());
+
+                    if((new LocationUtils().getChunkCoords(verify)).equals(claims.get(location))){
+
+                        plugin.getChatUtils().log(MessageType.INFO, "É igual.");
+
                         claims.remove(location);
+                        claimArr.remove(i);
+
+                        plugin.getChatUtils().log(MessageType.INFO, "Removidos");
                     }
-                });
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
             return;
         }
-        plugin.getChatUtils().playerMessage(Bukkit.getPlayer(player), "&aNão podes apagar um terreno que não tens.");
+        plugin.getChatUtils().playerMessage(Bukkit.getPlayer(player), "&cNão podes apagar um terreno que não tens.");
     }
 
     public Map<Location, UUID> getClaims() {

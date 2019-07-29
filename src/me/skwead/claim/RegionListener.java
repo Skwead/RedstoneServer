@@ -28,8 +28,8 @@ public class RegionListener implements Listener {
 
         if((owner != null) && (!owner.equals(e.getPlayer().getUniqueId()))){
             if((e.getPlayer().getGameMode().equals(GameMode.CREATIVE)) && (!plugin.getRegionManager().getClaimOwner(location).equals(owner))){
-            e.setCancelled(true);
-            plugin.getChatUtils().playerMessage(e.getPlayer(), "&cNão podes destruir blocos fora do teu terreno em modo criativo.");
+                e.setCancelled(true);
+                plugin.getChatUtils().playerMessage(e.getPlayer(), "&cNão podes destruir blocos fora do teu terreno em modo criativo.");
             }
             e.setCancelled(true);
             plugin.getChatUtils().playerMessage(e.getPlayer(), "&cNão podes destruir blocos em terreno protegido.");
